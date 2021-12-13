@@ -521,9 +521,9 @@ namespace ConsoleApp1
                 return Array.Empty<byte>();
             }
             base32text = base32text.Trim().TrimEnd(padding);
-            int len = base32text.Length;
+            long len = base32text.Length;
             const int cutlength = 8;
-            int len2 = len % cutlength == 0 ? len / cutlength : (len / cutlength) + 1;
+            long len2 = len % cutlength == 0 ? len / cutlength : (len / cutlength) + 1;
             string[] splitedtext = new string[len2];
             for(int i = 0; i < splitedtext.Length; i++)
             {
@@ -561,7 +561,7 @@ namespace ConsoleApp1
                 for(int j = 0; j < 5; j++)
                 {
                     ulong aaa = (piece>>(4 - j) * 8)&255;
-                    if (i*5+j<Math.Ceiling(len/1.6)&(i != splitedtext.Length-1|j<len3))
+                    if (i != splitedtext.Length-1|j<len3)
                     {
                         decoded.Add((byte)aaa);
                     }
@@ -589,7 +589,17 @@ namespace ConsoleApp1
                 }
                 for(int j = 0; j < 8; j++)
                 {
-                    if (i<divideinto-1|(i == divideinto-1 && (data.Length%5==0|j<Math.Ceiling(data.Length%5*1.6))))
+                    int finallength=8;
+                    switch (data.Length%5) 
+                    {
+                        case 0: finallength = 8; break;
+                        case 1: finallength = 2; break;
+                        case 2: finallength = 4; break;
+                        case 3: finallength = 5; break;
+                        case 4: finallength = 7; break;
+                    }
+
+                    if (i<divideinto-1|(i == divideinto-1 && j<finallength))
                     {
                         encoded += table[(int)((temp >> 5 * (7 - j)) & mask)];
                     }
