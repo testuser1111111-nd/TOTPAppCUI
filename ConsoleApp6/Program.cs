@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
-using System.Web;
 
 
 namespace ConsoleApp1
 {
     public static class Program
     {
-        
         private static void Main()
         {
             int span = 30;
