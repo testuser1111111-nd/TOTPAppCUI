@@ -8,7 +8,7 @@ namespace ConsoleApp1
 {
     public static class Program
     {
-        private static void Main()
+        public static void Main()
         {
             int span = 30;
             List<string[]> keys = ImportKey();
@@ -202,7 +202,7 @@ namespace ConsoleApp1
                                 {
                                     try
                                     {
-                                        Console.WriteLine("name:{0} , TOTP:{1:000000}", key[0], GenTOTP(RFC4648Base32.FromBase32String(key[1]), 0, span));
+                                        Console.WriteLine("name:{0} , TOTP:{1:000000}", key[0], RFC6238andRFC4226.GenTOTP(RFC4648Base32.FromBase32String(key[1]), 0, span));
                                     }
                                     catch(Exception ex)
                                     {
@@ -211,7 +211,7 @@ namespace ConsoleApp1
                                     counter++;
                                 }
                                 int time = DateTime.UtcNow.Second;
-                                long timecounter = GenCounter();
+                                long timecounter = RFC6238andRFC4226.GenCounter();
                                 Console.WriteLine("Remaining time:{0} second", span - time % span);
                                 Console.WriteLine("Regenerate? \"Yes\" to regenerate key.\"Time\" to show time.\"No\" to return main menu");
                                 bool answered = false;
@@ -227,7 +227,7 @@ namespace ConsoleApp1
                                     else if (answer == "Time")
                                     {
                                         int remaintime = span - time % span - (DateTime.UtcNow.Second - time);
-                                        if (GenCounter()==timecounter)
+                                        if (RFC6238andRFC4226.GenCounter()==timecounter)
                                         {
                                             Console.WriteLine("Remaining time:{0} second", remaintime);
                                         }
@@ -417,35 +417,39 @@ namespace ConsoleApp1
                 return ex.Message;
             }
         }
-        static int GenTOTP(byte[] S, int adjust = 0, int span = 30)
+
+        
+    }
+    public static class RFC6238andRFC4226
+    {
+
+        public static int GenTOTP(byte[] S, int adjust = 0, int span = 30)
         {
 
             TimeSpan time = DateTime.UtcNow - new DateTime(1970, 1, 1);
             var counter = (long)time.TotalSeconds / span;
             return GenHOTP(S, counter + adjust);
         }
-        static long GenCounter(int span = 30)
+        public static long GenCounter(int span = 30)
         {
-            TimeSpan ts = DateTime.UtcNow - new DateTime(1970,1,1);
-            return (long)ts.TotalSeconds/span;
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1);
+            return (long)ts.TotalSeconds / span;
         }
-        static int GenHOTP(byte[] S,long C,int digit=6)
+        public static int GenHOTP(byte[] S, long C, int digit = 6)
         {
             var hmsha = new HMACSHA1();
             hmsha.Key = S;
             var counter = BitConverter.GetBytes(C);
             Array.Reverse(counter, 0, counter.Length);//RFC4226ではSとCの上位バイトを先にするのが必だが自分が実装したときはbitconverterは下位バイトを先に出力してしまうから
             var hs = hmsha.ComputeHash(counter);
-            return DTruncate(hs)%(int)(Math.Pow(10,digit));
+            return DTruncate(hs) % (int)(Math.Pow(10, digit));
         }
         static int DTruncate(byte[] vs)
         {
-            var offset = vs[vs.Length-1]&15;
-            var P = (vs[offset]<<24|vs[offset+1]<<16|vs[offset+2]<<8|vs[offset+3])&0x7fffffff;
+            var offset = vs[vs.Length - 1] & 15;
+            var P = (vs[offset] << 24 | vs[offset + 1] << 16 | vs[offset + 2] << 8 | vs[offset + 3]) & 0x7fffffff;
             return P;
         }
-
-        
     }
     public static class RFC4648Base32
     {
