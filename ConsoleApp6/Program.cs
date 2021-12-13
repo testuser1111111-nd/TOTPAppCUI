@@ -422,7 +422,7 @@ namespace ConsoleApp1
     }
     public static class RFC6238andRFC4226
     {
-
+        //requires "using System;" and "using System.Security.Cryptography;" on top of code
         public static int GenTOTP(byte[] S, int adjust = 0, int span = 30)
         {
 
@@ -453,6 +453,7 @@ namespace ConsoleApp1
     }
     public static class RFC4648Base32
     {
+        //requires "using System;" and "using System.Collections.Generic;" on top of code
         public static int CharToInt(char c)
         {
             switch (c) {
