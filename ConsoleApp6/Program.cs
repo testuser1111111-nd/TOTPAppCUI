@@ -349,7 +349,7 @@ namespace ConsoleApp1
                             Console.WriteLine("input key name");
                             string name = string.Empty+Console.ReadLine();
                             Console.WriteLine("input key byte length(default is 10)");
-                            int length = 20;
+                            int length = 10;
                             try
                             {
                                 length = int.Parse(Console.ReadLine()+string.Empty);
