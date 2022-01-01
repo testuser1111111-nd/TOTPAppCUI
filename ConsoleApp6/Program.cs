@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 
 namespace ConsoleApp1
@@ -32,6 +33,7 @@ namespace ConsoleApp1
                             Console.WriteLine("7 => clear console");
                             Console.WriteLine("8 => generate a key to test");
                             Console.WriteLine("9 => save and quit");
+                            Console.WriteLine("10 => Licences");
                             try
                             {
                                 status = int.Parse(string.Empty + Console.ReadLine());
@@ -361,6 +363,13 @@ namespace ConsoleApp1
                             flag = false;
                         }
                         break;
+                    case 10:
+                        {
+                                Console.WriteLine("Access https://www.npca.jp/about/agreements/ to see the licence agreement");
+                            
+                            status = 0;
+                        }
+                        break;
                     default:
                         {
                             Console.WriteLine("wrong input. try again.");
@@ -430,7 +439,7 @@ namespace ConsoleApp1
             var counter = (long)time.TotalSeconds / span;
             return GenHOTP(S, counter + adjust);
         }
-        public static long GenCounter(int span = 30)
+        public static long GenCounter(long span = 30)
         {
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1);
             return (long)ts.TotalSeconds / span;
