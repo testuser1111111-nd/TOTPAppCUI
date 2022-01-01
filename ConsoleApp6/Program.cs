@@ -208,7 +208,7 @@ namespace ConsoleApp1
                                     }
                                     catch(Exception ex)
                                     {
-                                        Console.WriteLine("name:{0} , TOTP:Error {1}",key[0],ex.ToString());
+                                        Console.WriteLine("name:{0} , TOTP:Error",key[0]);
                                     }
                                     counter++;
                                 }
@@ -327,7 +327,7 @@ namespace ConsoleApp1
                                     }
                                     catch(Exception ex)
                                     {
-                                        Console.WriteLine("index = {2},name : {0} \t, key :Error {1}", s[0], ex.ToString(), counter);
+                                        Console.WriteLine("index = {1},name : {0} \t, key :Error", s[0], counter);
                                     }
                                         counter++;
                                 }
