@@ -125,12 +125,12 @@ namespace LibraryForTOTP
 
             switch (len4)
             {
-                case 1: throw new Exception("Base32 length not appropriate(1)");
+                case 1: throw new FormatException("Base32 length not appropriate");
                 case 2: len3 = 1; break;
-                case 3: throw new Exception("Base32 length not appropriate(3)");
+                case 3: throw new FormatException("Base32 length not appropriate");
                 case 4: len3 = 2; break;
                 case 5: len3 = 3; break;
-                case 6: throw new Exception("Base32 length not appropriate(6)");
+                case 6: throw new FormatException("Base32 length not appropriate");
                 case 7: len3 = 4; break;
                 case 8: len3 = 5; break;
             }
