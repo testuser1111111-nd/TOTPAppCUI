@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using LibraryForTOTP;
 using System.Diagnostics;
 
 
@@ -204,7 +205,7 @@ namespace ConsoleApp1
                                 {
                                     try
                                     {
-                                        Console.WriteLine("name:{0} , TOTP:{1:000000}", key[0], LibraryForTOTP.RFC6238andRFC4226.GenTOTP(LibraryForTOTP.RFC4648Base32.FromBase32String(key[1]), 0, span));
+                                        Console.WriteLine("name:{0} , TOTP:{1:000000}", key[0], RFC6238andRFC4226.GenTOTP(RFC4648Base32.FromBase32String(key[1]), 0, span));
                                     }
                                     catch(Exception ex)
                                     {
@@ -213,7 +214,7 @@ namespace ConsoleApp1
                                     counter++;
                                 }
                                 int time = DateTime.UtcNow.Second;
-                                long timecounter = LibraryForTOTP.RFC6238andRFC4226.GenCounter();
+                                long timecounter = RFC6238andRFC4226.GenCounter();
                                 Console.WriteLine("Remaining time:{0} second", span - time % span);
                                 Console.WriteLine("Regenerate? \"Yes\" to regenerate key.\"Time\" to show time.\"No\" to return main menu");
                                 bool answered = false;
@@ -229,7 +230,7 @@ namespace ConsoleApp1
                                     else if (answer == "Time")
                                     {
                                         int remaintime = span - time % span - (DateTime.UtcNow.Second - time);
-                                        if (LibraryForTOTP.RFC6238andRFC4226.GenCounter()==timecounter)
+                                        if (RFC6238andRFC4226.GenCounter()==timecounter)
                                         {
                                             Console.WriteLine("Remaining time:{0} second", remaintime);
                                         }
@@ -294,7 +295,7 @@ namespace ConsoleApp1
                                 {
 
                                     //fuck cs8602 warning
-                                    keys.Add(new string[] { inputname, LibraryForTOTP.RFC4648Base32.ToBase32String(Convert.FromBase64String(inputkey)) });
+                                    keys.Add(new string[] { inputname, RFC4648Base32.ToBase32String(Convert.FromBase64String(inputkey)) });
                                     Console.WriteLine("your key has been added successfully. returning to main menu");
                                     status = 0;
                                     keyconfirm = true;
@@ -323,7 +324,7 @@ namespace ConsoleApp1
                                 {
                                     try
                                     {
-                                        Console.WriteLine("index = {2},name : {0} \t, key {1}", s[0], Convert.ToBase64String(LibraryForTOTP.RFC4648Base32.FromBase32String(s[1])), counter);
+                                        Console.WriteLine("index = {2},name : {0} \t, key {1}", s[0], Convert.ToBase64String(RFC4648Base32.FromBase32String(s[1])), counter);
                                     }
                                     catch(Exception ex)
                                     {
@@ -359,7 +360,7 @@ namespace ConsoleApp1
                             byte[] bytes = new byte[length];
                             RandomNumberGenerator.Fill(bytes);
                             //cs8602 warning
-                            keys.Add(new string[] {name,LibraryForTOTP.RFC4648Base32.ToBase32String(bytes)});
+                            keys.Add(new string[] {name,RFC4648Base32.ToBase32String(bytes)});
                             Console.WriteLine("added a new key to the list");
                             status = 0;
                         }
