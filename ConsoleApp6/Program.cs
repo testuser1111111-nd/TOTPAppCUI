@@ -326,7 +326,7 @@ namespace ConsoleApp1
                                     {
                                         Console.WriteLine("index = {2},name : {0} \t, key {1}", s[0], Convert.ToBase64String(RFC4648Base32.FromBase32String(s[1])), counter);
                                     }
-                                    catch(Exception ex)
+                                    catch
                                     {
                                         Console.WriteLine("index = {1},name : {0} \t, key :Error", s[0], counter);
                                     }
