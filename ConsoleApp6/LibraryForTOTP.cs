@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Collections.Generic;
+using System.Text;
 namespace LibraryForTOTP
 {
     public static class RFC6238andRFC4226
     {
-        //requires "using System;" and "using System.Security.Cryptography;" on top of code
         public static int GenTOTP(byte[] S, int adjust = 0, int span = 30)
         {
 
@@ -36,7 +36,6 @@ namespace LibraryForTOTP
     }
     public static class RFC4648Base32
     {
-        //requires "using System;" and "using System.Collections.Generic;" on top of code
         public static int CharToInt(char c)
         {
             switch (c)
@@ -164,7 +163,7 @@ namespace LibraryForTOTP
         {
             const uint mask = 31;
             int divideinto = data.Length % 5 == 0 ? data.Length / 5 : data.Length / 5 + 1;
-            string encoded = string.Empty;
+            StringBuilder encoded = new StringBuilder();
             for (int i = 0; i < divideinto; i++)
             {
                 ulong temp = 0;
@@ -190,16 +189,16 @@ namespace LibraryForTOTP
 
                     if (i < divideinto - 1 | (i == divideinto - 1 && j < finallength))
                     {
-                        encoded += table[(int)((temp >> 5 * (7 - j)) & mask)];
+                        encoded.Append(table[(int)((temp >> 5 * (7 - j)) & mask)]);
                     }
                     else
                     {
-                        encoded += padding;
+                        encoded.Append(padding);
                     }
 
                 }
             }
-            return encoded;
+            return encoded.ToString();
         }
     }
 }
