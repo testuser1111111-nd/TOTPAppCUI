@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 namespace LibraryForTOTP
 {
     public static class RFC6238andRFC4226
