@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using LibraryForTOTP;
 using System.Diagnostics;
+using Microsoft.VisualBasic.FileIO;
 
 
 namespace ConsoleApp1
@@ -387,18 +388,20 @@ namespace ConsoleApp1
                 }   
             }
         }
-        private static List<string[]> ImportKey(string PathOfKey = "Keys.csv")
+        private static List<string[]> ImportKey(string PathOfKey = ".\\Keys.csv")
         {
-                List<string[]> keys = new List<string[]>();
-                var keyfile = File.Open(PathOfKey,FileMode.OpenOrCreate);
-                keyfile.Close();
-                string[] keyarray = File.ReadAllLines(keyfile.Name);
-                foreach (string key in keyarray)
-                {
-                    string[] splited = key.Split('\u002C');
-                    keys.Add(splited);
-                }
-                return keys;   
+            List<string[]> keys = new List<string[]>();
+            var parser = new TextFieldParser(Path.GetFullPath(PathOfKey));
+            parser.TextFieldType = FieldType.Delimited;
+            parser.Delimiters = new string[] { "," };
+            parser.HasFieldsEnclosedInQuotes = true;
+            while (!parser.EndOfData)
+            {
+                var fields = parser.ReadFields();
+                keys.Add(new string[] { fields[0], fields[1] });
+            }
+            parser.Close();
+            return keys;
         }
 
         private static string ExportKey(List<string[]>? Keys, string PathOfKey = "Keys.csv",string BackupName = "backup.csv")
