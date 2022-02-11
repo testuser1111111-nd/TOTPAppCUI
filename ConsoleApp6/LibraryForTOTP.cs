@@ -8,7 +8,6 @@ namespace LibraryForTOTP
     {
         public static int GenTOTP(byte[] S, int adjust = 0, int span = 30)
         {
-
             TimeSpan time = DateTime.UtcNow - new DateTime(1970, 1, 1);
             var counter = (long)time.TotalSeconds / span;
             return GenHOTP(S, counter + adjust);
@@ -36,72 +35,9 @@ namespace LibraryForTOTP
     }
     public static class RFC4648Base32
     {
-        public static int CharToInt(char c)
-        {
-            switch (c)
-            {
-                case 'a': return 0;
-                case 'b': return 1;
-                case 'c': return 2;
-                case 'd': return 3;
-                case 'e': return 4;
-                case 'f': return 5;
-                case 'g': return 6;
-                case 'h': return 7;
-                case 'i': return 8;
-                case 'j': return 9;
-                case 'k': return 10;
-                case 'l': return 11;
-                case 'm': return 12;
-                case 'n': return 13;
-                case 'o': return 14;
-                case 'p': return 15;
-                case 'q': return 16;
-                case 'r': return 17;
-                case 's': return 18;
-                case 't': return 19;
-                case 'u': return 20;
-                case 'v': return 21;
-                case 'w': return 22;
-                case 'x': return 23;
-                case 'y': return 24;
-                case 'z': return 25;
-                case 'A': return 0;
-                case 'B': return 1;
-                case 'C': return 2;
-                case 'D': return 3;
-                case 'E': return 4;
-                case 'F': return 5;
-                case 'G': return 6;
-                case 'H': return 7;
-                case 'I': return 8;
-                case 'J': return 9;
-                case 'K': return 10;
-                case 'L': return 11;
-                case 'M': return 12;
-                case 'N': return 13;
-                case 'O': return 14;
-                case 'P': return 15;
-                case 'Q': return 16;
-                case 'R': return 17;
-                case 'S': return 18;
-                case 'T': return 19;
-                case 'U': return 20;
-                case 'V': return 21;
-                case 'W': return 22;
-                case 'X': return 23;
-                case 'Y': return 24;
-                case 'Z': return 25;
-                case '2': return 26;
-                case '3': return 27;
-                case '4': return 28;
-                case '5': return 29;
-                case '6': return 30;
-                case '7': return 31;
-                default: return -1;
-            }
-
-        }
+        const string tablestring = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        private static char[] table = tablestring.ToCharArray();
+        public static int CharToInt(char c) => Array.IndexOf(table, Char.ToUpper(c));
         public static byte[] FromBase32String(string base32text, char padding = '=')
         {
             if (base32text == null || base32text.Length == 0)
@@ -115,10 +51,12 @@ namespace LibraryForTOTP
             string[] splitedtext = new string[len2];
             for (int i = 0; i < splitedtext.Length; i++)
             {
-                splitedtext[i] = base32text.Substring(0, cutlength < base32text.Length ? cutlength : base32text.Length);
-                base32text = base32text.Substring(cutlength < base32text.Length ? cutlength : base32text.Length);
+                for (int j = i * 8; j < (base32text.Length > (i + 1) * 8 ? (i + 1) * 8 : base32text.Length); j++)
+                {
+                    splitedtext[i] += base32text[j];
+                }
             }
-            List<byte> decoded = new List<byte>();
+            LinkedList<byte> decoded = new LinkedList<byte>();
             int len3 = 0;
             int len4 = splitedtext[splitedtext.Length - 1].Length;
 
@@ -138,12 +76,17 @@ namespace LibraryForTOTP
                 ulong piece = 0;
                 for (int j = 0; j < cutlength; j++)
                 {
-
                     piece <<= 5;
-
                     if (j < splitedtext[i].Length)
                     {
-                        piece |= (uint)CharToInt(splitedtext[i][j]);
+                        if (CharToInt(splitedtext[i][j]) < 0)
+                        {
+                            throw new FormatException("Letter not appropriate");
+                        }
+                        else
+                        {
+                            piece |= (uint)CharToInt(splitedtext[i][j]);
+                        }
                     }
                 }
                 for (int j = 0; j < 5; j++)
@@ -151,19 +94,26 @@ namespace LibraryForTOTP
                     ulong aaa = (piece >> (4 - j) * 8) & 255;
                     if (i != splitedtext.Length - 1 | j < len3)
                     {
-                        decoded.Add((byte)aaa);
+                        decoded.AddLast((byte)aaa);
                     }
-
                 }
             }
             return decoded.ToArray();
         }
-        public const string table = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         public static string ToBase32String(byte[] data, char padding = '=')
         {
             const uint mask = 31;
             int divideinto = data.Length % 5 == 0 ? data.Length / 5 : data.Length / 5 + 1;
-            StringBuilder encoded = new StringBuilder();
+            StringBuilder encoded = new StringBuilder(divideinto * 8);
+            int finallength = 8;
+            switch (data.Length % 5)
+            {
+                case 0: finallength = 8; break;
+                case 1: finallength = 2; break;
+                case 2: finallength = 4; break;
+                case 3: finallength = 5; break;
+                case 4: finallength = 7; break;
+            }
             for (int i = 0; i < divideinto; i++)
             {
                 ulong temp = 0;
@@ -177,16 +127,6 @@ namespace LibraryForTOTP
                 }
                 for (int j = 0; j < 8; j++)
                 {
-                    int finallength = 8;
-                    switch (data.Length % 5)
-                    {
-                        case 0: finallength = 8; break;
-                        case 1: finallength = 2; break;
-                        case 2: finallength = 4; break;
-                        case 3: finallength = 5; break;
-                        case 4: finallength = 7; break;
-                    }
-
                     if (i < divideinto - 1 | (i == divideinto - 1 && j < finallength))
                     {
                         encoded.Append(table[(int)((temp >> 5 * (7 - j)) & mask)]);
@@ -195,7 +135,6 @@ namespace LibraryForTOTP
                     {
                         encoded.Append(padding);
                     }
-
                 }
             }
             return encoded.ToString();
