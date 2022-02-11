@@ -29,8 +29,8 @@ namespace ConsoleApp1
                             Console.WriteLine("2 => delete key(s)");
                             Console.WriteLine("3 => calculate TOTP from saved key(s)");
                             Console.WriteLine("4 => input new key(s) in Base32");
-                            Console.WriteLine("5 => input new key(s) in Base64(not recommended)");
-                            Console.WriteLine("6 => show saved key(s) in Base64(not recommended)");
+                            Console.WriteLine("5 => input new key(s) in Base64");
+                            Console.WriteLine("6 => show saved key(s) in Base64");
                             Console.WriteLine("7 => clear console");
                             Console.WriteLine("8 => generate a key to test");
                             Console.WriteLine("9 => save and quit");
