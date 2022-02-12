@@ -390,6 +390,7 @@ namespace ConsoleApp1
         }
         private static List<string[]> ImportKey(string PathOfKey = ".\\Keys.csv")
         {
+            File.Open(PathOfKey, FileMode.OpenOrCreate).Dispose();
             List<string[]> keys = new List<string[]>();
             var parser = new TextFieldParser(Path.GetFullPath(PathOfKey));
             parser.TextFieldType = FieldType.Delimited;
@@ -418,7 +419,9 @@ namespace ConsoleApp1
                     {
                         foreach (string key in Key)
                         {
-                            temp += key + ',';
+                            var rgxquote = new Regex("\"");
+                            rgxquote.Replace(key, "\"\"");
+                            temp += "\"" + key + "\"" + ',';
                         }
                         temp = temp.Substring(0, temp.Length - 1);
                         temp += '\n';
