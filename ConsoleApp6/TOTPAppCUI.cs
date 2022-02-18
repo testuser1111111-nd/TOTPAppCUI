@@ -7,9 +7,9 @@ using System.Diagnostics;
 using Microsoft.VisualBasic.FileIO;
 
 
-namespace ConsoleApp1
+namespace TOTPAppCUI
 {
-    public static class Program
+    public static class TOTPAppCUI
     {
         public static void Main()
         {
@@ -30,8 +30,8 @@ namespace ConsoleApp1
                             Console.WriteLine("2 => delete key(s)");
                             Console.WriteLine("3 => calculate TOTP from saved key(s)");
                             Console.WriteLine("4 => input new key(s) in Base32");
-                            Console.WriteLine("5 => input new key(s) in Base64(not recommended)");
-                            Console.WriteLine("6 => show saved key(s) in Base64(not recommended)");
+                            Console.WriteLine("5 => input new key(s) in Base64");
+                            Console.WriteLine("6 => show saved key(s) in Base64");
                             Console.WriteLine("7 => clear console");
                             Console.WriteLine("8 => generate a key to test");
                             Console.WriteLine("9 => save and quit");
@@ -208,7 +208,7 @@ namespace ConsoleApp1
                                     {
                                         Console.WriteLine("name:{0} , TOTP:{1:000000}", key[0], RFC6238andRFC4226.GenTOTP(RFC4648Base32.FromBase32String(key[1]), 0, span));
                                     }
-                                    catch(Exception ex)
+                                    catch
                                     {
                                         Console.WriteLine("name:{0} , TOTP:Error",key[0]);
                                     }
