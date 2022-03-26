@@ -374,7 +374,7 @@ namespace TOTPAppCUI
                         break;
                     case 10:
                         {
-                                Console.WriteLine("Access https://www.npca.jp/about/agreements/ to see the licence agreement");
+                                Console.WriteLine("Access https://github.com/testuser1111111-nd/TOTPAppCUI/blob/master/LICENSE to see the licence agreement");
                             
                             status = 0;
                         }
